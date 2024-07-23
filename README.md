@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a Task Management App built using Node.js and Express. It includes functionality for user authentication, password reset, and token management.
+This is a Task Management System REST api built using Node.js, Express and mongodb.
 
 ## Getting Started
 
