@@ -44,3 +44,13 @@ EMAIL_PASSWORD=your_email_password
 MONGO_URI=your_mongodb_connection_string
 BASE_URL=http://localhost:3000
 ```
+
+4. **Start the Server**
+
+Run the application with
+
+```
+npm start
+```
+
+The app will be accessible at http://localhost:3000.
