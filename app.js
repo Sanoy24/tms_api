@@ -9,7 +9,11 @@ connectDB();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello this is from tms api");
+  res.send(`
+    <h1>Welcome to the Task Management System API</h1>
+    <p>1. Registration page: <a href="/api/auth/register">/api/auth/register</a></p>
+    <p>2. Login page: <a href="/api/auth/login">/api/auth/login</a></p>
+  `);
 });
 
 app.use("/api", authRouter);
