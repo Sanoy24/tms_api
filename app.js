@@ -1,8 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const connectDB = require("./db");
 const authRouter = require("./routes/auth.route");
-require("dotenv").config();
-
+const categoryRoute = require("./routes/category.route");
+const taskRouter = require("./routes/task.route");
+const errorHandler = require("./middleware/errorHandler");
 const app = express();
 
 connectDB();
@@ -17,7 +19,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", authRouter);
-
+app.use("/api", categoryRoute);
+app.use("/api", taskRouter);
+app.use(errorHandler);
 app.listen(process.env.PORT, () => {
   console.log(`app running on port ${process.env.PORT}`);
 });
