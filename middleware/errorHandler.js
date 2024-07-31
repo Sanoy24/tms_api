@@ -13,10 +13,10 @@ const errorHandler = async (err, req, res, next) => {
   }
 
   if (err instanceof CustomError) {
-    // if (isDev && stripAnsi) {
-    //   console.error("CustomError:", err.message);
-    //   console.error(stripAnsi(err.stack));
-    // }
+    if (isDev && stripAnsi) {
+      console.error("CustomError:", err.message);
+      console.error(stripAnsi(err.stack));
+    }
     return res.status(err.statusCode).json({
       status: "error",
       statusCode: err.statusCode,
