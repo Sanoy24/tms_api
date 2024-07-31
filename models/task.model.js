@@ -19,6 +19,7 @@ const taskSchema = new mongoose.Schema({
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
+  shared_with: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 taskSchema.pre("findOneAndUpdate", function (next) {

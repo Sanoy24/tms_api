@@ -7,6 +7,7 @@ const {
   updateTask,
   deleteTask,
   updateStatus,
+  shareTask,
 } = require("../controllers/task.controller");
 const {
   addComment,
@@ -19,5 +20,6 @@ router.delete("/tasks/delete-task/:id", authMiddleware, deleteTask);
 router.put("/tasks/:id/status", authMiddleware, updateStatus);
 router.post("/tasks/:taskId/add-comment", authMiddleware, addComment);
 router.get("/tasks/:taskId/comments", authMiddleware, getComments);
+router.post("/tasks/:taskId/share", authMiddleware, shareTask);
 
 module.exports = router;

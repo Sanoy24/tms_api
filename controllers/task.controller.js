@@ -1,6 +1,7 @@
 const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const Task = require("../models/task.model");
 const { NotFoundError, CustomError } = require("../utils/customError");
+const createNotification = require("../utils/notification");
 
 exports.createTask = async (req, res) => {
   const { title, description, due_date, priority, assigned_to, category } =
@@ -16,6 +17,12 @@ exports.createTask = async (req, res) => {
   });
   try {
     await task.save();
+    if (assigned_to && assigned_to !== req.user.id) {
+      await createNotification(
+        assigned_to,
+        `You have been assigned a new task: "${title}".`
+      );
+    }
     res.status(StatusCodes.OK).send({ message: ReasonPhrases.OK, task });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send(error.message);
@@ -72,6 +79,12 @@ exports.updateTask = async (req, res, next) => {
     if (!task) {
       return next(new NotFoundError("task not found"));
     }
+    if (task.assigned_to) {
+      await createNotification(
+        task.assigned_to,
+        `Task "${task.title}" has been marked as completed.`
+      );
+    }
     res.send(task);
   } catch (error) {
     return next(new Error(error));
@@ -105,8 +118,35 @@ exports.updateStatus = async (req, res, next) => {
     if (!task) {
       return next(new NotFoundError("task not found"));
     }
+    if (updates.status === "completed") {
+      await createNotification(
+        task.assigned_to,
+        `Task "${task.title}" has been completed.`
+      );
+    }
     res.send(task);
   } catch (error) {
     return next(new Error(error));
+  }
+};
+
+exports.shareTask = async (req, res, next) => {
+  const { taskId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(StatusCodes.NOT_FOUND).send("Task not found");
+    }
+
+    task.shared_with.push(userId);
+    await task.save();
+
+    res.send(task);
+  } catch (error) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message });
   }
 };
